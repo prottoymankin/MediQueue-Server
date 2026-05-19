@@ -27,6 +27,11 @@ const run = async () => {
     const db = client.db("mediqueue");
     const tutorCollection = db.collection("tutors");
 
+    app.get("/tutors", async (req, res) => {
+      const result = await tutorCollection.find({}).toArray();
+      res.send(result);
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {}
