@@ -27,6 +27,12 @@ const run = async () => {
     const db = client.db("mediqueue");
     const tutorCollection = db.collection("tutors");
 
+    app.post("/tutors", async (req, res) => {
+      const newTutorData = req.body;
+      const result = await tutorCollection.insertOne(newTutorData);
+      res.send(result);
+    })
+
     app.get("/tutors", async (req, res) => {
       const limit = parseInt(req.query.limit);
       let query = tutorCollection.find({});
