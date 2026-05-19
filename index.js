@@ -28,7 +28,14 @@ const run = async () => {
     const tutorCollection = db.collection("tutors");
 
     app.get("/tutors", async (req, res) => {
-      const result = await tutorCollection.find({}).toArray();
+      const limit = parseInt(req.query.limit);
+      let query = tutorCollection.find({});
+
+      if (limit) {
+        query = tutorCollection.find({}).limit(limit);
+      }
+
+      const result = await query.toArray();
       res.send(result);
     });
 
