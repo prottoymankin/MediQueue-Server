@@ -34,17 +34,6 @@ const run = async () => {
       res.send(result);
     });
 
-    app.post("/booked-session", async (req, res) => {
-      const bookedSessionData = req.body;
-      const result = await bookedSessionsCollection.insertOne(bookedSessionData);
-      res.send(result);
-    });
-
-    app.get("/booked-session", async (req, res) => {
-      const result = await bookedSessionsCollection.find({}).toArray();
-      res.send(result);
-    });
-
     app.get("/tutors", async (req, res) => {
       const limit = parseInt(req.query.limit);
       let query = tutorCollection.find({});
@@ -61,6 +50,35 @@ const run = async () => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
       const result = await tutorCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.post("/booked-session", async (req, res) => {
+      const bookedSessionData = req.body;
+      const result = await bookedSessionsCollection.insertOne(bookedSessionData);
+      res.send(result);
+    });
+
+    app.get("/booked-session/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { studentId: id };
+      const result = await bookedSessionsCollection.find(query).toArray();
+      res.send(result);
+    });
+    
+    app.patch("/booked-session/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedData = req.body;
+
+      const query = { _id: new ObjectId(id) };
+
+      const result = await bookedSessionsCollection.updateOne(
+        query,
+        {
+          $set: updatedData
+        }
+      );
+
       res.send(result);
     })
 
