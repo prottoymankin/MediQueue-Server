@@ -26,12 +26,24 @@ const run = async () => {
     await client.connect();
     const db = client.db("mediqueue");
     const tutorCollection = db.collection("tutors");
+    const bookedSessionsCollection = db.collection("bookedSession");
 
     app.post("/tutors", async (req, res) => {
       const newTutorData = req.body;
       const result = await tutorCollection.insertOne(newTutorData);
       res.send(result);
-    })
+    });
+
+    app.post("/booked-session", async (req, res) => {
+      const bookedSessionData = req.body;
+      const result = await bookedSessionsCollection.insertOne(bookedSessionData);
+      res.send(result);
+    });
+
+    app.get("/booked-session", async (req, res) => {
+      const result = await bookedSessionsCollection.find({}).toArray();
+      res.send(result);
+    });
 
     app.get("/tutors", async (req, res) => {
       const limit = parseInt(req.query.limit);
