@@ -46,12 +46,32 @@ const run = async () => {
       res.send(result);
     });
 
+    app.get("/tutors/my-tutors/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await tutorCollection.find({ createdBy: id }).toArray();
+      res.send(result);
+    })
+
     app.get("/tutors/:id", async (req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
       const result = await tutorCollection.findOne(query);
       res.send(result);
-    })
+    });
+
+    app.patch("/tutors/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updatedData = req.body;
+      const result = await tutorCollection.updateOne(
+        query,
+        {
+          $set: updatedData
+        }
+      );
+
+      res.send(result);
+    });
 
     app.post("/booked-session", async (req, res) => {
       const bookedSessionData = req.body;
@@ -80,7 +100,7 @@ const run = async () => {
       );
 
       res.send(result);
-    })
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
