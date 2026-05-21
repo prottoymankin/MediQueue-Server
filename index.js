@@ -73,6 +73,20 @@ const run = async () => {
       res.send(result);
     });
 
+    app.patch("/tutors/change-slot/:id", async (req, res) => {
+      const id = req.params.id;
+      const { value } = req.body;
+      
+      const query = { _id: new ObjectId(id) };
+      const result = await tutorCollection.updateOne(
+        query,
+        {
+          $inc: { totalSlot: parseInt(value) }
+        }
+      ); 
+      res.send(result);
+    });
+
     app.delete("/tutors/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
