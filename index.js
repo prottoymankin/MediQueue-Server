@@ -66,10 +66,17 @@ const run = async () => {
       const result = await tutorCollection.updateOne(
         query,
         {
-          $set: updatedData
+          $set: updatedData,
         }
       );
 
+      res.send(result);
+    });
+
+    app.delete("/tutors/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await tutorCollection.deleteOne(query);
       res.send(result);
     });
 
