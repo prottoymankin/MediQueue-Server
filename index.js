@@ -98,6 +98,28 @@ const run = async () => {
       res.send(result);
     });
 
+    app.get("/api/tutors/filter-by-date", async (req, res) => {
+      const { startDate, endDate } = req.query;
+      
+      let query = {};
+
+      if (startDate && endDate) {
+        query = {
+          $and: [
+            {
+              sessionStartDate: {
+                $gte: startDate,
+                $lte: endDate
+              }
+            }
+          ]
+        }
+      }
+
+      const result = await tutorCollection.find(query).toArray();
+      res.send(result);
+    });
+
     app.patch("/tutors/:id", verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
